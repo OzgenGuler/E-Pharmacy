@@ -1,16 +1,24 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { clearToken, instance, setToken } from "../instance";
+// import { clearToken, instance, setToken } from "../instance";
 import { toast } from "react-toastify";
 
 export const registration = createAsyncThunk(
   "user/register",
   async (credentials, { rejectWithValue }) => {
     try {
-      const data = await instance.post("/user/register", credentials);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      const data = await instance.post("/user/register", credentials, {
+        signal: controller.signal,
+      });
       setToken(data.token);
       toast.success("Successful operation");
+      clearTimeout(timeoutId);
       return data;
     } catch (error) {
+      if (error.name === "AbortError") {
+        return rejectWithValue("Request timeout - backend may be down");
+      }
       switch (error.response?.status) {
         case 400:
           toast.error("Email or password invalid");
@@ -27,20 +35,28 @@ export const registration = createAsyncThunk(
         default:
           return;
       }
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
-  }
+  },
 );
 
 export const login = createAsyncThunk(
   "user/login",
   async (credentials, { rejectWithValue }) => {
     try {
-      const { data } = await instance.post("/user/login", credentials);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      const { data } = await instance.post("/user/login", credentials, {
+        signal: controller.signal,
+      });
       setToken(data.token);
       toast.success("Successful operation");
+      clearTimeout(timeoutId);
       return data;
     } catch (error) {
+      if (error.name === "AbortError") {
+        return rejectWithValue("Request timeout - backend may be down");
+      }
       switch (error.response?.status) {
         case 400:
           toast.error("Bad request (invalid request body)");
@@ -57,9 +73,9 @@ export const login = createAsyncThunk(
         default:
           return;
       }
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data?.message || error.message);
     }
-  }
+  },
 );
 
 export const logout = createAsyncThunk(
@@ -85,7 +101,7 @@ export const logout = createAsyncThunk(
           return rejectWithValue(error);
       }
     }
-  }
+  },
 );
 
 export const getUserInfo = createAsyncThunk(
@@ -102,5 +118,5 @@ export const getUserInfo = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { instance, setToken } from "../instance";
+// import { instance, setToken } from "../instance";
 import { toast } from "react-toastify";
 
 export const getNearestStores = createAsyncThunk(
@@ -12,7 +12,7 @@ export const getNearestStores = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const getReviews = createAsyncThunk(
@@ -24,7 +24,7 @@ export const getReviews = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const getAllStores = createAsyncThunk(
@@ -36,7 +36,7 @@ export const getAllStores = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const getProducts = createAsyncThunk(
@@ -45,13 +45,13 @@ export const getProducts = createAsyncThunk(
     try {
       const { category = "", name = "", page = "", limit = "" } = body;
       const { data } = await instance.get(
-        `/products?category=${category}&name=${name}&page=${page}&limit=${limit}`
+        `/products?category=${category}&name=${name}&page=${page}&limit=${limit}`,
       );
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const getProductById = createAsyncThunk(
@@ -63,7 +63,7 @@ export const getProductById = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const addCart = createAsyncThunk(
@@ -77,7 +77,7 @@ export const addCart = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const getCartItems = createAsyncThunk(
@@ -94,7 +94,7 @@ export const getCartItems = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const updateCart = createAsyncThunk(
@@ -107,7 +107,7 @@ export const updateCart = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const cartCheckout = createAsyncThunk(
@@ -122,7 +122,7 @@ export const cartCheckout = createAsyncThunk(
       toast.error("Something went wrong, please try again.");
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const deleteCart = createAsyncThunk(
@@ -136,7 +136,7 @@ export const deleteCart = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const decreaseQuantity = createAsyncThunk(
@@ -149,5 +149,5 @@ export const decreaseQuantity = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
